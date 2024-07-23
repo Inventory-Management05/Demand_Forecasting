@@ -1,0 +1,102 @@
+/* InputData.css */
+
+.input-data-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.input-data-section {
+    width: 80%;
+    background-color: rgba(0, 0, 0, 0.8); /* Light blue with 50% opacity */
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.input-data-text {
+    color: white;
+    text-align: center;
+}
+
+.input-data-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.input-data-form input[type="file"] {
+    padding: 10px;
+    color: white;
+    background-color: rgba(101, 58, 58, 0.866);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.input-data-form button {
+    padding: 10px 20px;
+    background-color: rgba(101, 58, 58, 0.866); /* Similar background color to cards */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.input-data-form button:hover {
+    background-color: rgba(129, 53, 53, 0.866);
+}
+
+/* Rules Section */
+.rules-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.rules-text {
+    color: white;
+    padding: 15px;
+    font-size: large;
+    flex: 1;
+}
+
+.rules-image {
+    flex: 1;
+    text-align: center;
+}
+
+.rules-image img {
+    max-width: 100%;
+    height: 300px;
+    border-radius: 10px;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+    .input-data-section {
+        width: 90%;
+    }
+}
+
+@media (max-width: 768px) {
+    .input-data-section {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .rules-section {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .input-data-section {
+        width: 100%;
+        padding: 10px;
+    }
+}

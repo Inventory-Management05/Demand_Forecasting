@@ -1,0 +1,47 @@
+.forecast-sales-container {
+    margin: 2rem;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .forecast-sales-container h1 {
+    margin-bottom: 1rem;
+  }
+  
+  .forecast-sales-container form {
+    margin-bottom: 2rem;
+  }
+  
+  .forecast-sales-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .forecast-sales-container input[type="text"],
+  .forecast-sales-container input[type="file"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .forecast-sales-container button {
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .forecast-sales-container button:hover {
+    background-color: #0056b3;
+  }
+  
+  #result {
+    margin-top: 2rem;
+  }
+  
