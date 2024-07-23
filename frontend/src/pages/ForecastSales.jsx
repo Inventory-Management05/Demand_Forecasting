@@ -22,9 +22,11 @@ const ForecastSales = () => {
       const formData = new FormData();
       formData.append('year', year);
       const response = await axios.post('http://localhost:5000/predict', formData);
+      console.log("Response Data:", response.data);  // Debug
       setResult(response.data);
       setError('');
     } catch (error) {
+      console.error("Error:", error.response.data);  // Debug
       setError(error.response.data.error || 'An error occurred');
     }
   };
@@ -38,6 +40,7 @@ const ForecastSales = () => {
       setResult({ message: response.data.message });
       setError('');
     } catch (error) {
+      console.error("Error:", error.response.data);  // Debug
       setError(error.response.data.error || 'An error occurred');
     }
   };
@@ -69,8 +72,7 @@ const ForecastSales = () => {
 
         {result.total_sales && (
           <>
-            <h2>Total Predicted Sales for {result.year}</h2>
-            <div>Total Predicted Sales: {result.total_sales}</div>
+            <h3>Total Predicted Sales for {result.year + " " + result.total_sales}</h3>
           </>
         )}
 

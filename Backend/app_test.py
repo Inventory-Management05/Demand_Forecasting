@@ -24,16 +24,17 @@ model = joblib.load('final_prophet_model.pkl')
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.json
-    year = int(data['year'])
-
+    # Handle FormData
+    year = request.form.get('year')
     try:
         plot_html = plot_forecast(year)
         total_sales = calculate_total_sales(year)
     
-        return jsonify({'plot': plot_html, 'total_sales': total_sales})
+        return jsonify({'plot': plot_html, 'total_sales': total_sales, 'year' : year})
     except ValueError:
         return jsonify({'error': 'Invalid year entered. Please enter a valid year.'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/retrain', methods=['POST'])
 def retrain():
@@ -49,22 +50,25 @@ def retrain():
         return jsonify({'error': str(e)}), 500
 
 def plot_forecast(year):
-    # Generate future dates for prediction
-    start_date = f'{year}-01-01'
-    end_date = f'{year}-12-31'
-    future_dates = pd.date_range(start=start_date, end=end_date, freq='D')
+    # Generate future dates for the specified year
+    future_dates = pd.date_range(start=f'{year}-01-01', end=f'{year}-12-31', freq='D')
     future_df = pd.DataFrame({'ds': future_dates})
 
     # Perform prediction
     forecast = model.predict(future_df)
 
     forecast.set_index('ds', inplace=True)
-    weekly_forecast = forecast['yhat'].resample('W').sum()
+    monthly_forecast = forecast['yhat'].resample('M').sum()
 
     # Create Plotly figure
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=weekly_forecast.index, y=weekly_forecast.values, mode='lines', name='Weekly Predictions'))
-    fig.update_layout(title=f'Weekly Forecast Plot for {year}', xaxis_title='Week', yaxis_title='Weekly Prediction')
+    fig.add_trace(go.Scatter(x=monthly_forecast.index, y=monthly_forecast.values, mode='lines+markers', name='Monthly Predictions'))
+    fig.update_layout(
+        title=f'Monthly Forecast Plot for {year}',
+        xaxis_title='Month',
+        yaxis_title='Monthly Prediction',
+        xaxis=dict(tickformat='%b %Y')
+    )
 
     return pio.to_html(fig, full_html=False)
 
