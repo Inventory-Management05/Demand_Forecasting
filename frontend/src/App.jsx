@@ -6,7 +6,6 @@ import Contact from './pages/Contact';
 import Services from './pages/Services';
 import InputData from './pages/InputData';
 import ForecastSales from './pages/ForecastSales';
-import ModelRetrain from './components/ModelRetrain';
 import './App.css';
 
 const App = () => {
@@ -34,7 +33,6 @@ const App = () => {
             <Link to="/services" onClick={toggleNav}>Services</Link>
             <Link to="/input-data" onClick={toggleNav}>Input Data</Link> 
             <Link to="/forecast-sales" onClick={toggleNav}>Forecast Sales</Link>
-            <Link to="/model-retrain" onClick={toggleNav}>Model Retrain</Link>
           </div>
         </nav>
         <Routes>
@@ -44,11 +42,7 @@ const App = () => {
           <Route path="/services" element={<Services />} />
           <Route path="/input-data" element={<InputData />} /> 
           <Route path="/forecast-sales" element={<ForecastSales />} />
-          <Route path="/model-retrain" element={<ModelRetrain />} />
         </Routes>
-        <footer className="footer">
-          <p>&copy; 2024 Company Name. All Rights Reserved ™</p>
-        </footer>
       </div>
     </Router>
   );

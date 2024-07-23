@@ -1,92 +1,59 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './ForecastSales.css';
+import Plot from 'react-plotly.js';
 
 const ForecastSales = () => {
   const [year, setYear] = useState('');
-  const [file, setFile] = useState(null);
-  const [result, setResult] = useState({});
+  const [graphData, setGraphData] = useState(null);
+  const [totalSales, setTotalSales] = useState('');
   const [error, setError] = useState('');
 
-  const handleYearChange = (e) => {
-    setYear(e.target.value);
+  const handleYearChange = (event) => {
+    setYear(event.target.value);
   };
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  const handleSubmitYear = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
-      const formData = new FormData();
-      formData.append('year', year);
-      const response = await axios.post('http://localhost:5000/predict', formData);
-      console.log("Response Data:", response.data);  // Debug
-      setResult(response.data);
-      setError('');
+      const response = await axios.post('http://localhost:5000/predict', new URLSearchParams({ year }));
+      if (response.data.error) {
+        setError(response.data.error);
+        setGraphData(null);
+        setTotalSales('');
+      } else {
+        setGraphData(JSON.parse(response.data.graph));
+        setTotalSales(response.data.total_sales);
+        setError('');
+      }
     } catch (error) {
-      console.error("Error:", error.response.data);  // Debug
-      setError(error.response.data.error || 'An error occurred');
-    }
-  };
-
-  const handleSubmitFile = async (e) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const response = await axios.post('http://localhost:5000/upload', formData);
-      setResult({ message: response.data.message });
-      setError('');
-    } catch (error) {
-      console.error("Error:", error.response.data);  // Debug
-      setError(error.response.data.error || 'An error occurred');
+      setError('An error occurred while fetching the forecast.');
+      setGraphData(null);
+      setTotalSales('');
     }
   };
 
   return (
-    <div className="forecast-sales-container">
-      <h1>Forecast</h1>
-
-      <form onSubmit={handleSubmitYear}>
-        <label htmlFor="year">Enter Year for Prediction:</label>
-        <input type="text" id="year" name="year" value={year} onChange={handleYearChange} required />
-        <button type="submit">Submit</button>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Year:
+          <input type="text" value={year} onChange={handleYearChange} />
+        </label>
+        <button type="submit">Predict</button>
       </form>
-
-      <h2>Or Upload Data to Retrain the Model</h2>
-      <form onSubmit={handleSubmitFile} encType="multipart/form-data">
-        <label htmlFor="file">Upload CSV or Excel File:</label>
-        <input type="file" id="file" name="file" accept=".csv,.xlsx" onChange={handleFileChange} required />
-        <button type="submit">Upload and Retrain</button>
-      </form>
-
-      <div id="result">
-        {result.plot && (
-          <>
-            <h2>Forecast Plot for {result.year}</h2>
-            <div dangerouslySetInnerHTML={{ __html: result.plot }} />
-          </>
-        )}
-
-        {result.total_sales && (
-          <>
-            <h3>Total Predicted Sales for {result.year + " " + result.total_sales}</h3>
-          </>
-        )}
-
-        {result.message && (
-          <div>{result.message}</div>
-        )}
-
-        {error && (
-          <div>
-            <h2>Error</h2>
-            <div>{error}</div>
-          </div>
-        )}
-      </div>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {totalSales && (
+        <div>
+          <h3>Total Sales: {totalSales}</h3>
+          {graphData && (
+            <Plot
+              data={graphData.data}
+              layout={graphData.layout}
+              style={{ width: '100%', height: '600px' }}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 };
