@@ -1,3 +1,6 @@
+import numpy as np
+np.float_=np.float16
+
 from flask import Flask, send_from_directory, jsonify, request
 import os
 from flask_cors import CORS
