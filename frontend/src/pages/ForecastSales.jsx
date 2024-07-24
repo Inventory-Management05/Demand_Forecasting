@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Plot from 'react-plotly.js';
+import './ForecastSales.css';
 
 const ForecastSales = () => {
   const [year, setYear] = useState('');
@@ -33,18 +34,18 @@ const ForecastSales = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Year:
-          <input type="text" value={year} onChange={handleYearChange} />
+    <div className="forecast-container">
+      <form onSubmit={handleSubmit} className="forecast-form">
+        <label className="forecast-label">
+          Enter Year:
+          <input type="text" value={year} onChange={handleYearChange} className="forecast-input" />
         </label>
-        <button type="submit">Predict</button>
+        <button type="submit" className="forecast-button">Predict</button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="forecast-error">{error}</p>}
       {totalSales && (
-        <div>
-          <h3>Total Sales: {totalSales}</h3>
+        <div className="forecast-result">
+          <h3 className="forecast-total">Total Sales of {year}: ₹{totalSales}</h3>
           {graphData && (
             <Plot
               data={graphData.data}

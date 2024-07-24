@@ -4,18 +4,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 5px;
     background-color: rgba(0, 0, 0, 0.8); /* Background color similar to other sections */
     border-radius: 10px;
-    margin: 20px auto;
-    width: 80%;
+    margin: 5px auto;
+    height: 100%;
+    width: 100%;
     max-width: 1200px;
     color: white;
 }
 
 .reportClass {
     width: 100%;
-    height: 600px; /* Set a height for the embed */
+    height: 700px; /* Set a height for the embed */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -23,7 +24,7 @@
 /* Responsive styles */
 @media (max-width: 1200px) {
     .services-main {
-        width: 90%;
+        width: 100%;
     }
 }
 

@@ -1,0 +1,82 @@
+.contact-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.contact-section {
+    width: 80%;
+    background-color: rgba(0, 0, 0, 0.8); /* Light blue with 50% opacity */
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.contact-text {
+    color: white;
+    text-align: center;
+}
+
+.team-members {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    flex-wrap: wrap; /* Ensure proper wrapping on smaller screens */
+}
+
+.team-member {
+    background-color: rgba(255, 255, 255, 0.1);
+    width: 30%; /* Make each card take 30% of the width */
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.team-member h3 {
+    color: rgba(255, 222, 222, 0.866); /* Similar background color to cards */
+    margin-bottom: 5px;
+}
+
+.team-member p {
+    color: white;
+    margin: 2px 0;
+}
+
+.team-member p strong {
+    color: rgba(231, 193, 193, 0.866); /* Emphasize strong text */
+}
+
+@media (max-width: 1200px) {
+    .contact-section {
+        width: 90%;
+    }
+
+    .team-member {
+        width: 45%; /* Make each card take 45% of the width on medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-section {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .team-member {
+        width: 100%; /* Make each card take 100% of the width on small screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-section {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .team-member {
+        width: 100%;
+    }
+}
