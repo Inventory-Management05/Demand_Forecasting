@@ -1,22 +1,81 @@
 import numpy as np
-np.float_=np.float16
+np.float_ = np.float16
 
-from flask import Flask, send_from_directory, jsonify, request
-import os
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import plotly.graph_objects as go
-import plotly.io as pio
 import pandas as pd
 import joblib
 from prophet import Prophet
+from io import StringIO
 
 app = Flask(__name__)
-
 CORS(app)
 
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
+# Load initial model
 model = joblib.load('final_prophet_model.pkl')
+
+# Load initial data
+initial_df = pd.read_excel('Groceries_Sales_data.xlsx')
+
+# Explicitly rename columns for initial data
+initial_df.rename(columns={'Date': 'date', 'Sales': 'sales'}, inplace=True)
+
+def preprocess_data(file):
+    if file.filename.endswith('.csv'):
+        df = pd.read_csv(file)
+    elif file.filename.endswith(('.xls', '.xlsx')):
+        df = pd.read_excel(file)
+    else:
+        raise ValueError("Unsupported file format. Please upload a CSV or Excel file.")
+    
+    date_column = None
+    sales_column = None
+
+    for column in df.columns:
+        try:
+            pd.to_datetime(df[column], errors='coerce')
+            date_column = column
+        except:
+            continue
+
+    for column in df.columns:
+        if column != date_column:
+            try:
+                df[column] = pd.to_numeric(df[column], errors='coerce')
+                if df[column].notnull().any():
+                    sales_column = column
+            except:
+                continue
+
+    if date_column is None or sales_column is None:
+        raise ValueError("Could not automatically detect 'date' and 'sales' columns in the input data")
+    
+    df.rename(columns={date_column: 'date', sales_column: 'sales'}, inplace=True)
+    df['date'] = pd.to_datetime(df['date'])
+    df['sales'].fillna(0, inplace=True)
+    df = df[['date', 'sales']]
+    
+    return df
+
+def retrain_model(new_data):
+    global model
+    model = Prophet()
+    new_data.rename(columns={'date': 'ds', 'sales': 'y'}, inplace=True)
+    model.fit(new_data)
+    joblib.dump(model, 'final_prophet_model.pkl')
+
+def generate_stock_data(df, year):
+    df = df[df['date'].dt.year == int(year)].copy()
+    df.sort_values('date', inplace=True)
+    initial_stock = 1000
+    df['cumulative_sales'] = df['sales'].cumsum()
+    df['stock_level'] = initial_stock - df['cumulative_sales']
+    stockout_threshold = 50
+    df['stockout'] = df['stock_level'] < stockout_threshold
+    return df
 
 def generate_forecast_data(year):
     future_dates = pd.date_range(start=f'{year}-01-01', end=f'{year}-12-31', freq='D')
@@ -25,79 +84,83 @@ def generate_forecast_data(year):
     forecast = model.predict(future_df)
     forecast.set_index('ds', inplace=True)
 
-    monthly_forecast = forecast['yhat'].resample('M').sum()
-    weekly_forecast = forecast['yhat'].resample('W').sum()
-    
-    return monthly_forecast, weekly_forecast
+    monthly_forecast = forecast['yhat'].resample('ME').sum()
+    yearly_total = monthly_forecast.sum()
 
-def generate_inventory_graphs(year):
-    start_date = f'{year}-01-01'
-    end_date = f'{year}-12-31'
-    dates = pd.date_range(start=start_date, end=end_date, freq='D')
-    
-    # Dummy implementation for stockouts and other inventory metrics
-    stockout_data = pd.Series([5 if x % 10 == 0 else 0 for x in range(len(dates))], index=dates)
-    stockout_resolved_data = pd.Series([3 if x % 15 == 0 else 0 for x in range(len(dates))], index=dates)
-    
-    return stockout_data, stockout_resolved_data
+    weekly_forecast = forecast['yhat'].resample('W').sum()
+    weekly_forecast_by_month = {month: weekly_forecast[weekly_forecast.index.month == month] for month in range(1, 13)}
+
+    return monthly_forecast, weekly_forecast_by_month, yearly_total
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    year = request.form.get('year')
     try:
-        monthly_forecast, weekly_forecast = generate_forecast_data(year)
-        total_sales = round(monthly_forecast.sum(), 2)
+        print("Request received")
+        data = request.form
+        print("Form data:", data)
+        forecast_type = data.get('forecast_type')
+        year = data.get('year')
+        month = data.get('month')
+        retrain = data.get('retrain')
+        file = request.files.get('file') if retrain else None
 
-        # Monthly Forecast Plot
-        monthly_fig = go.Figure()
-        monthly_fig.add_trace(go.Scatter(x=monthly_forecast.index, y=monthly_forecast.values, mode='lines+markers', name='Monthly Predictions'))
-        monthly_fig.update_layout(
-            title=f'Monthly Forecast Plot for {year}',
-            xaxis_title='Month',
-            yaxis_title='Monthly Prediction',
-            xaxis=dict(tickformat='%b %Y')
-        )
-        monthly_graph_json = monthly_fig.to_json()
+        if not year:
+            raise ValueError("Year is required")
 
-         # Weekly Forecast Plot
-        weekly_fig = go.Figure()
-        weekly_fig.add_trace(go.Scatter(x=weekly_forecast.index, y=weekly_forecast.values, mode='lines+markers', name='Weekly Predictions'))
-        weekly_fig.update_layout(
-            title=f'Weekly Forecast Plot for {year}',
-            xaxis_title='Week',
-            yaxis_title='Weekly Prediction',
-            xaxis=dict(tickformat='%b %Y')
-        )
-        weekly_graph_json = weekly_fig.to_json()
+        if file and retrain:
+            df = preprocess_data(file)
+            retrain_model(df)
+            stock_data = generate_stock_data(df, year)
+        elif file:
+            df = preprocess_data(file)
+            stock_data = generate_stock_data(df, year)
+        else:
+            stock_data = generate_stock_data(initial_df, year)
 
-        # Inventory Management Graphs
-        stockout_data, stockout_resolved_data = generate_inventory_graphs(year)
+        monthly_forecast, weekly_forecast_by_month, yearly_total = generate_forecast_data(year)
+        total_sales_for_year = round(yearly_total, 2)
 
-        stockout_fig = go.Figure()
-        stockout_fig.add_trace(go.Bar(x=stockout_data.index, y=stockout_data.values, name='Stockouts'))
-        stockout_fig.add_trace(go.Bar(x=stockout_resolved_data.index, y=stockout_resolved_data.values, name='Stockout Resolutions'))
-        stockout_fig.update_layout(
-            title='Stockouts and Resolutions',
-            xaxis_title='Date',
-            yaxis_title='Count',
-            barmode='group'
-        )
-        stockout_graph_json = stockout_fig.to_json()
+        monthly_graph = None
+        weekly_forecast_json = {}
+        total_sales_for_month = None
+        stock_graph_json = None
 
-        return jsonify({
-            'monthly_graph': monthly_graph_json,
-            'weekly_graph': weekly_graph_json,
-            'stockout_graph': stockout_graph_json,
-            'total_sales': total_sales,
-            'year': year
-        })
+        if forecast_type == 'yearly':
+            monthly_fig = go.Figure()
+            monthly_fig.add_trace(go.Scatter(x=monthly_forecast.index, y=monthly_forecast.values, mode='lines+markers', name='Monthly Predictions'))
+            monthly_fig.update_layout(title=f'Monthly Forecast Plot for {year}', xaxis_title='Month', yaxis_title='Monthly Prediction', xaxis=dict(tickformat='%b %Y'))
+            monthly_graph = monthly_fig.to_json()
+
+        if forecast_type == 'monthly' and month:
+            month = int(month)
+            if month < 1 or month > 12:
+                raise ValueError("Month must be between 1 and 12")
+
+            weekly_data = weekly_forecast_by_month[month]
+            weekly_fig = go.Figure()
+            weekly_fig.add_trace(go.Scatter(x=weekly_data.index, y=weekly_data.values, mode='lines+markers', name='Weekly Predictions'))
+            weekly_fig.update_layout(title=f'Weekly Forecast Plot for {year}-{month:02d}', xaxis_title='Week', yaxis_title='Weekly Prediction', xaxis=dict(tickformat='%b %d %Y'))
+            weekly_forecast_json['specific_month'] = weekly_fig.to_json()
+            total_sales_for_month = round(weekly_data.sum(), 2)
+
+        if forecast_type == 'stock':
+            stock_fig = go.Figure()
+            stock_fig.add_trace(go.Scatter(x=stock_data['date'], y=stock_data['stock_level'], mode='lines+markers', name='Stock Levels')) 
+            stock_fig.add_trace(go.Scatter(x=stock_data['date'], y=stock_data['stockout'], mode='markers', name='Stockouts', marker=dict(color='red')))
+            stock_fig.update_layout(title=f'Stock Levels and Stockouts for {year}', xaxis_title='Date', yaxis_title='Stock Level', xaxis=dict(tickformat='%b %Y'))
+            stock_graph_json = stock_fig.to_json()
+
+        response = {
+            'yearly_total_sales': total_sales_for_year if forecast_type == 'yearly' else None,
+            'monthly_total_sales': total_sales_for_month if forecast_type == 'monthly' else None,
+            'monthly_graph': monthly_graph,
+            'weekly_graph': {'specific_month': weekly_forecast_json.get('specific_month')} if forecast_type == 'monthly' else None,
+            'stock_graph': stock_graph_json,
+        }
+        return jsonify(response)
     except Exception as e:
-        return jsonify({'error': f'Error: {str(e)}'}), 500
-    
-    #     graph_json = fig.to_json()
-    #     return jsonify({'graph': graph_json, 'total_sales': total_sales, 'year': year})
-    # except Exception as e:
-    #     return jsonify({'error': f'Error: {str(e)}'}), 500
+        print(f"Error: {str(e)}")
+        return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
     app.run(debug=True)
