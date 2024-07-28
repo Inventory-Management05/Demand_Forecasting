@@ -21,31 +21,29 @@ const Home = () => {
           <img src="/home-img1.jpeg" alt="Description 1" />
           <h3>About Us</h3>
           <p>
-            Discover how our cutting-edge demand forecasting models
-            revolutionize inventory management. We leverage advanced analytics
-            and historical data to provide precise demand predictions, enhancing
-            efficiency and reducing stock-related issues for retail businesses.
+            Discover our advanced demand forecasting models that revolutionize
+            inventory management. We use analytics and historical data to
+            provide precise demand predictions, enhancing efficiency and
+            reducing stock issues for retail businesses.
           </p>
         </div>
         <div className="card">
           <img src="/home-img2.jpeg" alt="Description 2" />
           <h3>Services</h3>
           <p>
-            Our services include developing tailored univariate and multivariate
-            demand forecasting models, comprehensive inventory management
-            solutions, and market trend analysis. We aim to optimize your retail
-            operations with accurate demand predictions and efficient inventory
-            control.
+            Our services include tailored univariate and multivariate demand
+            forecasting models, comprehensive inventory management solutions,
+            and market trend analysis to optimize your retail operations.
           </p>
         </div>
         <div className="card">
           <img src="/home-img3.jpg" alt="Description 3" />
           <h3>Contact Us</h3>
           <p>
-            Get in touch with us for any inquiries or support. We're here to
-            assist you with our demand forecasting solutions and inventory
-            management services. Reach out via email, phone, or our online
-            contact form for prompt and personalized assistance.
+            Contact us for inquiries or support. We're here to assist with our
+            demand forecasting solutions and inventory management services.
+            Reach out via email, phone, or our online contact form for prompt
+            assistance.
           </p>
         </div>
       </div>

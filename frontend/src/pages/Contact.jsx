@@ -16,12 +16,12 @@ const ContactUs = () => {
           <div className="team-member">
             <h3>Ansh Rajani</h3>
             <p><strong>Role:</strong> Team Lead</p>
-            <p><strong>Email:</strong> ansh.rajani@example.com</p>
+            <p><strong>Email:</strong> anshrajani123@gmail.com</p>
           </div>
           <div className="team-member">
             <h3>Aryan Sharma</h3>
             <p><strong>Role:</strong> Web Developer</p>
-            <p><strong>Email:</strong> aryan.sharma@example.com</p>
+            <p><strong>Email:</strong> aryanshar17@gmail.com</p>
           </div>
           <div className="team-member">
             <h3>Shivam Sharma</h3>

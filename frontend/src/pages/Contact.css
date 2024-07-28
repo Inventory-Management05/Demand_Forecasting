@@ -8,18 +8,19 @@
 
 .contact-section {
     width: 80%;
-    background-color: rgba(0, 0, 0, 0.8); /* Light blue with 50% opacity */
+    background-color: #EDCDBB; /* Light blue with 50% opacity */
     padding: 20px;
     border-radius: 10px;
     margin-bottom: 20px;
 }
 
 .contact-text {
-    color: white;
+    color: black;
     text-align: center;
 }
 
 .team-members {
+    
     display: flex;
     justify-content: space-around;
     gap: 20px;
@@ -27,7 +28,7 @@
 }
 
 .team-member {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #E3B7A0;
     width: 30%; /* Make each card take 30% of the width */
     padding: 10px;
     border-radius: 10px;
@@ -36,17 +37,17 @@
 }
 
 .team-member h3 {
-    color: rgba(255, 222, 222, 0.866); /* Similar background color to cards */
+    color: black; /* Similar background color to cards */
     margin-bottom: 5px;
 }
 
 .team-member p {
-    color: white;
+    color: black;
     margin: 2px 0;
 }
 
 .team-member p strong {
-    color: rgba(231, 193, 193, 0.866); /* Emphasize strong text */
+    color: black; /* Emphasize strong text */
 }
 
 @media (max-width: 1200px) {

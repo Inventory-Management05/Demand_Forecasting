@@ -4,11 +4,10 @@
   align-items: center;
   gap: 20px;
   padding: 20px;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: #EDCDBB;
   border-radius: 10px;
-  margin-bottom: 20px;
   width: 80%;
-  margin: 0 auto;
+  margin: 25px auto;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
@@ -21,47 +20,49 @@
 }
 
 .forecast-label {
-  color: white;
-  align-items: center;
-  margin-bottom: 10px;
+  padding: 10px;
+  color: black;
   font-size: 18px;
   width: 100%;
-  text-align: left;
+  display: inline;
+  align-items: center;
 }
-.forecast-checkbox-label {
-  height: 4vh;
-  width: 8vh;
+
+.forecast-retrain {
+  font-size: 20px;
 }
 
 .forecast-checkbox {
-  height: 4vh;
-  width: 8vh;
-  margin-top: 10px;
-  margin-left: 10px;
+  height: 3vh;
+  width: 3vh;
+  color: bisque;
 }
 
 .forecast-input {
   padding: 10px;
-  color: white;
-  background-color: rgba(101, 58, 58, 0.866);
+  color: black;
+  background-color: #E3B7A0;
   border: none;
   border-radius: 10px;
+  font-size: 15px;
   width: 100%;
   box-sizing: border-box;
 }
 
 .forecast-button {
   padding: 10px 20px;
-  background-color: rgba(101, 58, 58, 0.866);
-  color: white;
+  background-color: #E3B7A0;
+  color: black;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  border: 2px solid #000000;
 }
 
 .forecast-button:hover {
-  background-color: rgba(129, 53, 53, 0.866);
+  background-color: #FFEDDB;
+  border-radius: 4px;
 }
 
 .forecast-error {
@@ -75,19 +76,19 @@
 }
 
 .forecast-total {
-  color: white;
+  color: black;
   font-size: 24px;
   margin-bottom: 20px;
 }
 
-.forecast-plot {
+.forecast-plot .user-select-none .svg-container{
   width: 100%;
   max-width: 800px;
   margin-top: 20px;
 }
 
 h3 {
-  color: white;
+  color: black;
   font-size: 20px;
   margin-bottom: 10px;
 }

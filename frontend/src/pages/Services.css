@@ -1,71 +1,51 @@
-.services-container {
+/* Services.css */
+
+.services-main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
-    background-color: rgba(0, 0, 0, 0.8); /* Dark background with 80% opacity */
+    /* padding: 20px; */
+    background-color: #EDCDBB; /* Background color similar to other sections */
     border-radius: 10px;
-    margin-bottom: 20px;
-    width: 80%;
-    margin: 0 auto;
-}
-
-.services-title {
-    color: white;
-    font-size: 24px;
-    text-align: center;
-}
-
-.services-description {
-    color: white;
-    font-size: 18px;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.powerbi-container {
+    margin: 20px auto;
+    max-height: fit-content;
     width: 100%;
-    height: 600px;
-    border-radius: 10px;
-    overflow: hidden;
+    max-width: 1200px;
+    color: black;
 }
 
-.powerbi-container iframe {
+.reportClass {
     width: 100%;
-    height: 100%;
-    border: none;
+    height: 700px; /* Set a height for the embed */
     border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Responsive styles */
 @media (max-width: 1200px) {
-    .services-container {
+    .services-main {
         width: 90%;
-    }
-
-    .powerbi-container {
-        height: 500px;
     }
 }
 
 @media (max-width: 768px) {
-    .services-container {
+    .services-main {
         width: 100%;
         padding: 15px;
     }
 
-    .powerbi-container {
-        height: 400px;
+    .reportClass {
+        height: 500px; /* Adjust height for smaller screens */
     }
 }
 
 @media (max-width: 480px) {
-    .services-container {
+    .services-main {
         width: 100%;
         padding: 10px;
     }
 
-    .powerbi-container {
-        height: 300px;
+    .reportClass {
+        height: 400px; /* Adjust height for mobile screens */
     }
 }

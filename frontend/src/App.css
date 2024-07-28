@@ -2,11 +2,11 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-image: url('./assets/homeImage2.jpg'); /* Replace with your image path */
+  /* background-image: url('./assets/homeImage2.jpg'); Replace with your image path */
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-color: rgba(0, 0, 0, 1); /* Background color with 50% opacity */
+  background-color:#FFEDDB; /* Background color with 50% opacity */
 }
 
 body::before {
@@ -21,7 +21,7 @@ body::before {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #333;
+  background-color: #BF9270;
   padding: 5px 20px;
   position: relative;
   opacity: 0.75;
@@ -38,7 +38,7 @@ body::before {
 }
 
 .company-name {
-  color: white;
+  color: black;
   position: relative;
   font-size: 24px;
   font-weight: bold;
@@ -50,14 +50,17 @@ body::before {
 }
 
 .navbar-links a {
-  color: white;
+  color: black;
   text-decoration: none;
+  border: 2px solid #000000;
+  border-radius: 10px;
   padding: 14px 20px;
   text-align: center;
+  font-weight: bold;
 }
 
 .navbar-links a:hover {
-  background-color: #575757;
+  background-color: #FFEDDB;
   border-radius: 4px;
 }
 
@@ -70,7 +73,7 @@ body::before {
 .hamburger {
   display: none;
   font-size: 30px;
-  color: white;
+  color: black;
   cursor: pointer;
 }
 
@@ -101,8 +104,8 @@ body::before {
   position: fixed;
   bottom: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-  color: white;
+  background-color: #EDCDBB; /* Semi-transparent black background */
+  color: black;
   padding: 10px 20px;
   border-top-left-radius: 10px;
   z-index: 1; /* Ensure it appears above the overlay */
