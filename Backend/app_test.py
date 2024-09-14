@@ -1,3 +1,4 @@
+import os
 import numpy as np
 np.float_ = np.float16
 
@@ -13,6 +14,8 @@ app = Flask(__name__)
 CORS(app)
 
 app.config['UPLOAD_FOLDER'] = 'uploads'
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 # Load initial model
 model = joblib.load('final_prophet_model.pkl')
@@ -23,7 +26,13 @@ initial_df = pd.read_excel('Groceries_Sales_data.xlsx')
 # Explicitly rename columns for initial data
 initial_df.rename(columns={'Date': 'date', 'Sales': 'sales'}, inplace=True)
 
-def preprocess_data(file):
+def preprocess_data(file, save_path):
+    print("Preprocessing data...")
+
+    # Save the uploaded file
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], save_path)
+    file.save(file_path)
+
     if file.filename.endswith('.csv'):
         df = pd.read_csv(file)
     elif file.filename.endswith(('.xls', '.xlsx')):
@@ -31,34 +40,29 @@ def preprocess_data(file):
     else:
         raise ValueError("Unsupported file format. Please upload a CSV or Excel file.")
     
-    date_column = None
-    sales_column = None
+    # Debug: Print columns after loading the file
+    print("Columns after loading the file:", df.columns)
 
-    for column in df.columns:
-        try:
-            pd.to_datetime(df[column], errors='coerce')
-            date_column = column
-        except:
-            continue
+    # Strip any leading/trailing whitespace from column names
+    df.columns = df.columns.str.strip()
 
-    for column in df.columns:
-        if column != date_column:
-            try:
-                df[column] = pd.to_numeric(df[column], errors='coerce')
-                if df[column].notnull().any():
-                    sales_column = column
-            except:
-                continue
+    # Debug: Print columns after stripping whitespace
+    print("Columns after stripping whitespace:", df.columns)
 
-    if date_column is None or sales_column is None:
+    # Check if 'date' and 'sales' columns exist
+    if 'date' not in df.columns or 'sales' not in df.columns:
         raise ValueError("Could not automatically detect 'date' and 'sales' columns in the input data")
     
-    df.rename(columns={date_column: 'date', sales_column: 'sales'}, inplace=True)
-    df['date'] = pd.to_datetime(df['date'])
-    df['sales'].fillna(0, inplace=True)
-    df = df[['date', 'sales']]
-    
-    return df
+    df['date'] = pd.to_datetime(df['date'], dayfirst=True, errors='coerce')
+    df['sales'] = pd.to_numeric(df['sales'], errors='coerce')
+
+    # Drop rows with invalid date or sales values
+    df.dropna(subset=['date', 'sales'], inplace=True)
+
+    # Debug: Print the first few rows of the dataframe
+    print("First few rows of the dataframe:", df.head())
+
+    return df[['date', 'sales']]
 
 def retrain_model(new_data):
     global model
@@ -70,10 +74,10 @@ def retrain_model(new_data):
 def generate_stock_data(df, year):
     df = df[df['date'].dt.year == int(year)].copy()
     df.sort_values('date', inplace=True)
-    initial_stock = 1000
+    initial_stock = 10000
     df['cumulative_sales'] = df['sales'].cumsum()
     df['stock_level'] = initial_stock - df['cumulative_sales']
-    stockout_threshold = 50
+    stockout_threshold = 1000
     df['stockout'] = df['stock_level'] < stockout_threshold
     return df
 
