@@ -15,7 +15,7 @@ const App = () => {
 
   return (
     <Router>
-      <div>
+      <div className="app-container">
         <nav className="navbar">
           <div className="navbar-left">
             <img src="/logo1.jpg" alt="Company Logo" className="logo" />
@@ -31,12 +31,14 @@ const App = () => {
             <Link to="/contact" onClick={toggleNav}>Contact Us</Link>
           </div>
         </nav>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/contact" element={<Contact />} /> 
-          <Route path="/services" element={<Services />} /> 
-          <Route path="/forecast-sales" element={<ForecastSales />} />
-        </Routes>
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/contact" element={<Contact />} /> 
+            <Route path="/services" element={<Services />} /> 
+            <Route path="/forecast-sales" element={<ForecastSales />} />
+          </Routes>
+        </main>
         <footer className="footer">
           <p>&copy; 2024 Demand Cast. All Rights Reserved ™</p>
         </footer>

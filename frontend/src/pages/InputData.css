@@ -1,23 +1,22 @@
-/* InputData.css */
-
 .input-data-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
     padding: 20px;
+    background-color: #1E1E1E;
 }
 
 .input-data-section {
     width: 80%;
-    background-color: rgba(0, 0, 0, 0.8); /* Light blue with 50% opacity */
+    background-color: #2B2B2B;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 15px;
     margin-bottom: 20px;
 }
 
 .input-data-text {
-    color: white;
+    color: #E3E3E3;
     text-align: center;
 }
 
@@ -30,8 +29,8 @@
 
 .input-data-form input[type="file"] {
     padding: 10px;
-    color: white;
-    background-color: rgba(101, 58, 58, 0.866);
+    color: #FFFFFF;
+    background-color: #3B3B3B;
     border: none;
     border-radius: 10px;
     cursor: pointer;
@@ -39,18 +38,17 @@
 
 .input-data-form button {
     padding: 10px 20px;
-    background-color: rgba(101, 58, 58, 0.866); /* Similar background color to cards */
-    color: white;
+    background-color: #3B3B3B;
+    color: #E3E3E3;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .input-data-form button:hover {
-    background-color: rgba(129, 53, 53, 0.866);
+    background-color: #4A4A4A;
 }
 
-/* Rules Section */
 .rules-section {
     display: flex;
     justify-content: space-between;
@@ -59,24 +57,14 @@
 }
 
 .rules-text {
-    color: white;
-    padding: 15px;
-    font-size: large;
-    flex: 1;
+    color: #E3E3E3;
+    padding: 10px;
 }
 
-.rules-image {
-    flex: 1;
-    text-align: center;
+.rules-checkbox {
+    margin-left: 10px;
 }
 
-.rules-image img {
-    max-width: 100%;
-    height: 300px;
-    border-radius: 10px;
-}
-
-/* Responsive styles */
 @media (max-width: 1200px) {
     .input-data-section {
         width: 90%;
@@ -89,8 +77,16 @@
         padding: 15px;
     }
 
-    .rules-section {
-        flex-direction: column;
+    .input-data-form input[type="file"] {
+        font-size: 14px;
+    }
+
+    .input-data-form button {
+        font-size: 14px;
+    }
+
+    .rules-text {
+        font-size: 16px;
     }
 }
 
@@ -98,5 +94,17 @@
     .input-data-section {
         width: 100%;
         padding: 10px;
+    }
+
+    .input-data-form input[type="file"] {
+        font-size: 12px;
+    }
+
+    .input-data-form button {
+        font-size: 12px;
+    }
+
+    .rules-text {
+        font-size: 14px;
     }
 }

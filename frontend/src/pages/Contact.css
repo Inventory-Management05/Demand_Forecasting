@@ -4,50 +4,51 @@
     align-items: center;
     gap: 20px;
     padding: 20px;
+    background-color: #1E1E1E; /* Dark background */
 }
 
 .contact-section {
     width: 80%;
-    background-color: #EDCDBB; /* Light blue with 50% opacity */
+    background-color: #2B2B2B; /* Darker section background */
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 15px;
     margin-bottom: 20px;
 }
 
 .contact-text {
-    color: black;
+    color: #FFFFFF;
     text-align: center;
 }
 
 .team-members {
-    
     display: flex;
     justify-content: space-around;
     gap: 20px;
-    flex-wrap: wrap; /* Ensure proper wrapping on smaller screens */
+    flex-wrap: wrap;
 }
 
 .team-member {
-    background-color: #E3B7A0;
-    width: 30%; /* Make each card take 30% of the width */
-    padding: 10px;
+    background-color: #3B3B3B; /* Darker card background */
+    width: 30%;
+    padding: 15px;
     border-radius: 10px;
     margin: 10px 0;
     text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .team-member h3 {
-    color: black; /* Similar background color to cards */
+    color: #E3E3E3; /* Light text color for headings */
     margin-bottom: 5px;
 }
 
 .team-member p {
-    color: black;
+    color: #B0B0B0; /* Slightly lighter text color */
     margin: 2px 0;
 }
 
 .team-member p strong {
-    color: black; /* Emphasize strong text */
+    color: #FFFFFF; /* Emphasize strong text */
 }
 
 @media (max-width: 1200px) {
@@ -56,7 +57,7 @@
     }
 
     .team-member {
-        width: 45%; /* Make each card take 45% of the width on medium screens */
+        width: 45%;
     }
 }
 
@@ -67,7 +68,7 @@
     }
 
     .team-member {
-        width: 100%; /* Make each card take 100% of the width on small screens */
+        width: 100%;
     }
 }
 
